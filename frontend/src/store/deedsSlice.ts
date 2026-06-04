@@ -1,18 +1,16 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
+import api from '@/lib/axios';
 import { Deed } from '@/types/deed';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
-
 export const fetchDeeds = createAsyncThunk('deeds/fetchAll', async () => {
-  const { data } = await axios.get<Deed[]>(`${API_URL}/deeds`);
+  const { data } = await api.get<Deed[]>('/deeds');
   return data;
 });
 
 export const createDeed = createAsyncThunk(
   'deeds/create',
   async (payload: { title: string; description?: string }) => {
-    const { data } = await axios.post<Deed>(`${API_URL}/deeds`, payload);
+    const { data } = await api.post<Deed>('/deeds', payload);
     return data;
   },
 );
@@ -20,13 +18,13 @@ export const createDeed = createAsyncThunk(
 export const toggleDeed = createAsyncThunk(
   'deeds/toggle',
   async ({ id, completed }: { id: number; completed: boolean }) => {
-    const { data } = await axios.put<Deed>(`${API_URL}/deeds/${id}`, { completed });
+    const { data } = await api.put<Deed>(`/deeds/${id}`, { completed });
     return data;
   },
 );
 
 export const deleteDeed = createAsyncThunk('deeds/delete', async (id: number) => {
-  await axios.delete(`${API_URL}/deeds/${id}`);
+  await api.delete(`/deeds/${id}`);
   return id;
 });
 
