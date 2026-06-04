@@ -27,6 +27,7 @@ services:
       DATABASE_USER: ${POSTGRES_USER:-postgres}
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       DATABASE_NAME: ${POSTGRES_DB:-good_deeds}
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
       PORT: 3001
     ports:
       - '3001:3001'
@@ -34,8 +35,8 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - ./backend/src:/app/src
+      - backend_node_modules:/app/node_modules
 
   frontend:
     build:
@@ -48,8 +49,10 @@ services:
     depends_on:
       - backend
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - ./frontend/src:/app/src
+      - frontend_node_modules:/app/node_modules
 
 volumes:
   postgres_data:
+  backend_node_modules:
+  frontend_node_modules:
